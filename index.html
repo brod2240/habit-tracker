@@ -4,10 +4,7 @@
   <meta charset="UTF-8" />
   <style>
     :root {
-      --widget-bg-light: #B195AF;
-      --widget-bg-dark: #755773;
-      --text-light: #ffffff;
-      --text-dark: #ffffff;
+      --neon-purple: #C724F5;
     }
 
     body {
@@ -19,34 +16,30 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      color: var(--text-dark);
+      color: white;
     }
 
     .widget-container {
-      background-color: var(--widget-bg-light);
-      color: var(--text-dark);
+      background-color: transparent;
+      border: 2px solid var(--neon-purple);
       border-radius: 16px;
       padding: 30px 20px;
       max-width: 800px;
       width: 100%;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       box-sizing: border-box;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    .dark-mode .widget-container {
-      background-color: var(--widget-bg-dark);
-      color: var(--text-light);
+      text-align: center;
     }
 
     h2 {
       margin-top: 0;
       font-size: 20px;
+      color: var(--neon-purple);
     }
 
     #streaks {
       margin-bottom: 20px;
       font-size: 14px;
+      color: white;
     }
 
     .checkbox-grid {
@@ -60,20 +53,22 @@
     input[type="checkbox"] {
       width: 20px;
       height: 20px;
-      accent-color: #ffffff;
+      accent-color: var(--neon-purple);
       cursor: pointer;
+      appearance: none;
+      background-color: transparent;
+      border: 2px solid white;
+      border-radius: 4px;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
-    .controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
+    input[type="checkbox"]:checked {
+      background-color: var(--neon-purple);
+      border-color: var(--neon-purple);
     }
 
-    .reset-btn, .toggle-btn {
-      background-color: rgba(255, 255, 255, 0.2);
+    .reset-btn {
+      background-color: var(--neon-purple);
       color: white;
       border: none;
       padding: 10px 16px;
@@ -83,8 +78,8 @@
       transition: background 0.3s ease;
     }
 
-    .reset-btn:hover, .toggle-btn:hover {
-      background-color: rgba(255, 255, 255, 0.3);
+    .reset-btn:hover {
+      background-color: #a41ec4;
     }
 
     @media (max-width: 600px) {
@@ -104,26 +99,16 @@
 
     <div class="checkbox-grid" id="checkboxes"></div>
 
-    <div class="controls">
-      <button class="reset-btn" id="resetButton">Reset</button>
-      <button class="toggle-btn" id="toggleMode">Toggle Dark Mode</button>
-    </div>
+    <button class="reset-btn" id="resetButton">Reset</button>
   </div>
 
   <script>
     const totalDays = 50;
     const checkboxesContainer = document.getElementById('checkboxes');
     const resetButton = document.getElementById('resetButton');
-    const toggleMode = document.getElementById('toggleMode');
-    const body = document.body;
 
     let longestStreak = parseInt(localStorage.getItem('longestStreak')) || 0;
     let savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '[]');
-    let isDark = localStorage.getItem('darkMode') === 'true';
-
-    function applyTheme() {
-      body.classList.toggle('dark-mode', isDark);
-    }
 
     function updateStreaks(states) {
       let streak = 0;
@@ -177,15 +162,8 @@
       }
     });
 
-    toggleMode.addEventListener('click', () => {
-      isDark = !isDark;
-      localStorage.setItem('darkMode', isDark);
-      applyTheme();
-    });
-
     initializeCheckboxes();
     updateStreaks(savedStates);
-    applyTheme();
   </script>
 </body>
 </html>
