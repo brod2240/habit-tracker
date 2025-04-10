@@ -4,43 +4,64 @@
   <meta charset="UTF-8">
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: #ffffff;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #755773;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+
+    .widget-container {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px 20px;
+      width: 300px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       text-align: center;
-      padding: 20px;
-      color: #333;
     }
 
     h2 {
-      margin-bottom: 10px;
+      margin-top: 0;
+      font-size: 20px;
+      color: #333;
     }
 
     #streaks {
-      font-size: 14px;
       margin-bottom: 20px;
+      color: #555;
+      font-size: 14px;
     }
 
     .checkbox-grid {
       display: grid;
-      grid-template-columns: repeat(6, 30px);
-      gap: 15px;
-      justify-content: center;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
     input[type="checkbox"] {
       width: 20px;
       height: 20px;
+      accent-color: #755773;
       cursor: pointer;
-      accent-color: #4caf50;
     }
 
-    /* Optional: container box to give the widget a bordered look */
-    .widget-container {
-      display: inline-block;
-      padding: 20px;
-      border-radius: 10px;
-      background: #f7f7f7;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    .reset-btn {
+      background-color: #755773;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: #5e4460;
     }
   </style>
 </head>
@@ -51,16 +72,16 @@
       Current Streak: <span id="currentStreak">0</span><br>
       Longest Streak: <span id="longestStreak">0</span>
     </div>
-    <div class="checkbox-grid" id="checkboxes">
-      <!-- Checkboxes added by JavaScript -->
-    </div>
+    <div class="checkbox-grid" id="checkboxes"></div>
+    <button class="reset-btn" id="resetButton">Reset</button>
   </div>
 
   <script>
     const totalDays = 30;
     const checkboxesContainer = document.getElementById('checkboxes');
-    let longestStreak = localStorage.getItem('longestStreak') || 0;
-    const savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '[]');
+    const resetButton = document.getElementById('resetButton');
+    let longestStreak = parseInt(localStorage.getItem('longestStreak')) || 0;
+    let savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '[]');
 
     function updateStreaks(states) {
       let streak = 0;
@@ -87,21 +108,35 @@
       localStorage.setItem('checkboxStates', JSON.stringify(states));
     }
 
-    // Generate 30 checkboxes
-    for (let i = 0; i < totalDays; i++) {
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.checked = savedStates[i] || false;
+    function initializeCheckboxes() {
+      checkboxesContainer.innerHTML = '';
+      for (let i = 0; i < totalDays; i++) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = savedStates[i] || false;
 
-      checkbox.addEventListener('change', () => {
-        savedStates[i] = checkbox.checked;
-        saveStates(savedStates);
-        updateStreaks(savedStates);
-      });
+        checkbox.addEventListener('change', () => {
+          savedStates[i] = checkbox.checked;
+          saveStates(savedStates);
+          updateStreaks(savedStates);
+        });
 
-      checkboxesContainer.appendChild(checkbox);
+        checkboxesContainer.appendChild(checkbox);
+      }
     }
 
+    resetButton.addEventListener('click', () => {
+      if (confirm('Reset all checkboxes and streaks?')) {
+        savedStates = Array(totalDays).fill(false);
+        longestStreak = 0;
+        localStorage.setItem('checkboxStates', JSON.stringify(savedStates));
+        localStorage.setItem('longestStreak', '0');
+        initializeCheckboxes();
+        updateStreaks(savedStates);
+      }
+    });
+
+    initializeCheckboxes();
     updateStreaks(savedStates);
   </script>
 </body>
