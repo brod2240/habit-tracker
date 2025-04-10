@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 10px;
+      background: #f4f4f4;
+      color: #333;
+    }
+    h2 {
+      margin-bottom: 5px;
+    }
+    #streaks {
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+    .checkbox-grid {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .day {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    input[type="checkbox"] {
+      transform: scale(1.5);
+      margin-top: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>🧠 Coding Habit Tracker</h2>
+  <div id="streaks">
+    Current Streak: <span id="currentStreak">0</span><br>
+    Longest Streak: <span id="longestStreak">0</span>
+  </div>
+  <div class="checkbox-grid" id="checkboxes">
+    <!-- Dynamically added boxes -->
+  </div>
+
+  <script>
+    const totalDays = 7; // Can change to 30 if you want a monthly view
+    const checkboxesContainer = document.getElementById('checkboxes');
+    let currentStreak = 0;
+    let longestStreak = localStorage.getItem('longestStreak') || 0;
+
+    // Load previous state
+    const savedStates = JSON.parse(localStorage.getItem('checkboxStates') || '[]');
+
+    function updateStreaks(states) {
+      let streak = 0;
+      let maxStreak = 0;
+      for (let i = 0; i < states.length; i++) {
+        if (states[i]) {
+          streak++;
+          if (streak > maxStreak) maxStreak = streak;
+        } else {
+          streak = 0;
+        }
+      }
+      document.getElementById('currentStreak').textContent = streak;
+      if (maxStreak > longestStreak) {
+        longestStreak = maxStreak;
+        localStorage.setItem('longestStreak', longestStreak);
+      }
+      document.getElementById('longestStreak').textContent = longestStreak;
+    }
+
+    function saveStates(states) {
+      localStorage.setItem('checkboxStates', JSON.stringify(states));
+    }
+
+    // Generate checkboxes
+    for (let i = 0; i < totalDays; i++) {
+      const div = document.createElement('div');
+      div.className = 'day';
+      const label = document.createElement('label');
+      label.textContent = `Day ${i + 1}`;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = savedStates[i] || false;
+
+      checkbox.addEventListener('change', () => {
+        savedStates[i] = checkbox.checked;
+        saveStates(savedStates);
+        updateStreaks(savedStates);
+      });
+
+      div.appendChild(label);
+      div.appendChild(checkbox);
+      checkboxesContainer.appendChild(div);
+    }
+
+    updateStreaks(savedStates);
+  </script>
+</body>
+</html>
