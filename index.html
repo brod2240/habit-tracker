@@ -5,6 +5,7 @@
   <style>
     :root {
       --neon-purple: #C724F5;
+      --checkbox-border: #51346d;
     }
 
     body {
@@ -53,12 +54,11 @@
     input[type="checkbox"] {
       width: 20px;
       height: 20px;
-      accent-color: var(--neon-purple);
+      background-color: white;
+      border: 2px solid var(--checkbox-border);
+      border-radius: 4px;
       cursor: pointer;
       appearance: none;
-      background-color: transparent;
-      border: 2px solid white;
-      border-radius: 4px;
       transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
