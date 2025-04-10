@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <style>
     :root {
-      --neon-purple: #51346d;
+      --neon-purple: #C724F5;
       --checkbox-border: #51346d;
     }
 
@@ -38,9 +38,14 @@
     }
 
     #streaks {
-      margin-bottom: 20px;
-      font-size: 14px;
+      margin: 20px 0;
+      font-size: 16px;
+      font-weight: bold;
       color: white;
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
     }
 
     .checkbox-grid {
@@ -86,15 +91,21 @@
       .checkbox-grid {
         grid-template-columns: repeat(5, 1fr);
       }
+
+      #streaks {
+        gap: 20px;
+        font-size: 14px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="widget-container">
     <h2>🧠 Coding Tracker</h2>
+
     <div id="streaks">
-      Current Streak: <span id="currentStreak">0</span><br>
-      Longest Streak: <span id="longestStreak">0</span>
+      <div>Current Streak: <span id="currentStreak">0</span> days</div>
+      <div>Longest Streak: <span id="longestStreak">0</span> days</div>
     </div>
 
     <div class="checkbox-grid" id="checkboxes"></div>
